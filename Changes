@@ -1,2 +1,8 @@
+v0.0.2    2012-02-27 18:25:36 CST6CDT
+	- Miscellaneous code cleanup.
+	- Removed unused dependencies.
+	- Added documentation stubs for object methods.
+	- Removed regexp modifier valid only in Perl versions > v5.12.
+
 v0.0.1    2012-02-09 04:20:43 CST6CDT
 	- First version, released on an unsuspecting world.

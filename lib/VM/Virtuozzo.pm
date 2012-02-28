@@ -7,11 +7,7 @@ use utf8;
 use Carp;
 use File::ShareDir qw(dist_dir);
 use File::Spec::Functions qw(catdir catfile);
-use Hash::FieldHash qw(fieldhash);
-use IO::Socket::INET;
 use Params::Check "check";
-use POSIX "floor";
-use Socket qw(inet_aton);
 use XML::Compile::Cache;
 use VM::Virtuozzo::Response;
 
@@ -22,11 +18,9 @@ use constant {
 
 use namespace::clean;
 
-our $VERSION = 'v0.0.1'; # VERSION
+our $VERSION = 'v0.0.2'; # VERSION
 # ABSTRACT: Client implementation of the Parallels Virtuozzo XML API
 
-fieldhash my %client => "_client";
-fieldhash my %schema => "_schema";
 my $schema = XML::Compile::Cache->new(
 	allow_undeclared => 1,
 	opts_rw          => { elements_qualified => 0 } );
@@ -53,24 +47,23 @@ sub new {
 	check( \%tmpl, \%params, 1 ) or croak "Parameter check failed";
 
 	# Create self and client attribute:
-	my $self = bless { }, $class;
-	$client{$self} = IO::Socket::INET->new(
+	my $client = IO::Socket::INET->new(
 		PeerAddr => $params{hostname},
 		PeerPort => 4433,
 		Proto    => "tcp",
 		Timeout  => 10 ) or croak "Unable to connect to server";
 	local $/ = "\0";
-	$self->_client->getline;
-	$schema{$self} = $schema; # Schema accessor exists only for unit tests
 
-	return $self; }
+	return bless {
+		_client => $client,
+		_schema => $schema }, $class; }
 
 my $packet_id = 1;
 my $doc       = Document->new("1.0", "UTF-8");
 sub _write_packet {
 	my ($self, $namespace, $function, $params) = @_;
-	XML::Compile::Util->import(qw(pack_type));
-	my $protocol_ns = $namespace =~ s/\w+$/protocol/rx;
+	my $protocol_ns = $namespace;
+	$protocol_ns =~ s/\w+$/protocol/x;
 	$protocol_ns =~ s/\bvza\b/vzl/xg;
 	my $packet_type =  pack_type($protocol_ns, "packet");
 	my $op_type = pack_type($namespace, $function);
@@ -83,9 +76,10 @@ sub _write_packet {
 		: Element->new($function) );
 	my $packet = $self->_schema->writer($packet_type)->(
 		$doc, {
-			id => $packet_id++,
+			id      => $packet_id++,
 			version => "4.0.0",
-			data => { cho_operator => [ { $short_ns => $operator } ] } } );
+			( $short_ns eq "system" ? () : ( target => $short_ns ) ),
+			data    => { cho_operator => [ { $short_ns => $operator } ] } } );
 	return $packet->toString; }
 
 # Generate API methods:
@@ -108,6 +102,8 @@ foreach my $namespace ( $schema->namespaces->list ) {
 
 __END__
 
+=pod
+
 =encoding utf8
 
 =head1 NAME
@@ -117,7 +113,7 @@ VM::Virtuozzo - Client implementation of the Parallels Virtuozzo XML API
 =head1 SYNOPSIS
 
 	my $vzzo = VM::Virtuozzo->new(
-		hostname    => "domain.tld",
+		hostname    => "domain.tld", # or an IPv4 address
 		use_ssl     => 0,
 		xsd_version => 4
 	);
@@ -132,13 +128,119 @@ VM::Virtuozzo - Client implementation of the Parallels Virtuozzo XML API
 
 =head1 DESCRIPTION
 
-c<VM::Virtuozzo> provides a client implementation of the Parallels Virtuozzo
-XML API, enabling one to remotely manage Parallels Virtuozzo Containers. The
-heavy lifting for this distribution is done by L<XML::Compile>.
+This distribution provides a client implementation of the Parallels Virtuozzo
+XML API, enabling the user to remotely manage Parallels Virtuozzo Containers.
+Handling of the XML data objects is delegated to C<XML::Compile>.
 
 =head1 METHODS
 
-=head2
+=head2 CLASS
+
+=over
+
+=item C<new(...)>
+
+Constructor. Call with the following named parameters (all mandatory):
+
+=over
+
+=item hostname => domain or IPv4 address
+
+=item use_ssl => 1 or 0
+
+=item xsd_version => 4 (only supported version for this release)
+
+=back
+
+=back
+
+=head2 OBJECT
+
+=over
+
+=item C<alertm(...)>
+
+=item C<authm(...)>
+
+=item C<backupm(...)>
+
+=item C<computerm(...)>
+
+=item C<data_storagem(...)>
+
+=item C<devm(...)>
+
+=item C<env_samplem(...)>
+
+=item C<envm(...)>
+
+=item C<event_log(...)>
+
+=item C<filer(...)>
+
+=item C<firewallm(...)>
+
+=item C<licensem(...)>
+
+=item C<mailer(...)>
+
+=item C<networkm(...)>
+
+=item C<op_log(...)>
+
+=item C<packagem(...)>
+
+=item C<perf_mon(...)>
+
+=item C<proc_info(...)>
+
+=item C<processm(...)>
+
+=item C<progress_event(...)>
+
+=item C<protocol(...)>
+
+=item C<relocator(...)>
+
+=item C<res_log(...)>
+
+=item C<resourcem(...)>
+
+=item C<scheduler(...)>
+
+=item C<server_group(...)>
+
+=item C<servicem(...)>
+
+=item C<sessionm(...)>
+
+=item C<system(...)>
+
+=item C<types(...)>
+
+=item C<userm(...)>
+
+=item C<vzadevm(...)>
+
+=item C<vzaenvm(...)>
+
+=item C<vzanetworkm(...)>
+
+=item C<vzapackagem(...)>
+
+=item C<vzaproc_info(...)>
+
+=item C<vzaprocessm(...)>
+
+=item C<vzarelocator(...)>
+
+=item C<vzasupport(...)>
+
+=item C<vzatypes(...)>
+
+=item C<vzaup2date(...)>
+
+=back
 
 =head1 AUTHOR
 
@@ -147,5 +249,6 @@ Richard Simões C<< <rsimoes AT cpan DOT org> >>
 =head1 COPYRIGHT AND LICENSE
 
 Copyright © 2012 Richard Simões. This module is released under the terms of the
-Artistic License 2.0 and may be modified and/or redistributed under the same or
-any compatible license.
+L<GNU Lesser General Public License v. 3.0|http://gnu.org/licenses/lgpl.html>
+and may be modified and/or redistributed under the same or any compatible
+license.
