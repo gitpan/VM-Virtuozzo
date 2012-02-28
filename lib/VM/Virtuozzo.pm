@@ -18,7 +18,7 @@ use constant {
 
 use namespace::clean;
 
-our $VERSION = 'v0.0.2'; # VERSION
+our $VERSION = 'v0.0.3'; # VERSION
 # ABSTRACT: Client implementation of the Parallels Virtuozzo XML API
 
 my $schema = XML::Compile::Cache->new(
@@ -102,8 +102,6 @@ foreach my $namespace ( $schema->namespaces->list ) {
 
 __END__
 
-=pod
-
 =encoding utf8
 
 =head1 NAME
@@ -113,24 +111,28 @@ VM::Virtuozzo - Client implementation of the Parallels Virtuozzo XML API
 =head1 SYNOPSIS
 
 	my $vzzo = VM::Virtuozzo->new(
-		hostname    => "domain.tld", # or an IPv4 address
-		use_ssl     => 0,
-		xsd_version => 4
+	    hostname    => "domain.tld", # or an IPv4 address
+	    use_ssl     => 0,
+	    xsd_version => 4
 	);
 	$vzzo->system( login => {
-		name     => "root",
-		realm    => "00000000-0000-0000-0000-000000000000",
-		password => "mysecret123"
+	    name     => "root",
+	    realm    => "00000000-0000-0000-0000-000000000000",
+	    password => "mysecret123"
 	} );
 	$vzzo->vzaenvm( suspend => { # suspend a container
-		eid => "e43581cb-f13a-324d-aab5-e356e19ebee4"
+	    eid => "e43581cb-f13a-324d-aab5-e356e19ebee4"
 	} );
 
 =head1 DESCRIPTION
 
 This distribution provides a client implementation of the Parallels Virtuozzo
 XML API, enabling the user to remotely manage Parallels Virtuozzo Containers.
-Handling of the XML data objects is delegated to C<XML::Compile>.
+Handling of the XML data objects is delegated to L<XML::Compile>.
+
+Be warned: this is B<ALPHA QUALITY SOFTWARE>. Significant bugs probably exist,
+some features are missing, and the interface should be considered unstable. Use
+at your own risk.
 
 =head1 METHODS
 
@@ -138,19 +140,21 @@ Handling of the XML data objects is delegated to C<XML::Compile>.
 
 =over
 
-=item C<new(...)>
+=item new(%args)
 
-Constructor. Call with the following named parameters (all mandatory):
+Constructor method callable with the following named parameters (all mandatory):
 
-=over
+=item C<hostname>
 
-=item hostname => domain or IPv4 address
+Domain name or IPv4 address of the Virtuozzo server.
 
-=item use_ssl => 1 or 0
+=item C<use_ssl>
 
-=item xsd_version => 4 (only supported version for this release)
+1 or 0 to connect over HTTPS.
 
-=back
+=item C<xsd_version>
+
+Integer value indicating API version: only B<4> is supported for this release.
 
 =back
 
@@ -158,87 +162,87 @@ Constructor. Call with the following named parameters (all mandatory):
 
 =over
 
-=item C<alertm(...)>
+=item alertm(...)
 
-=item C<authm(...)>
+=item authm(...)
 
-=item C<backupm(...)>
+=item backupm(...)
 
-=item C<computerm(...)>
+=item computerm(...)
 
-=item C<data_storagem(...)>
+=item data_storagem(...)
 
-=item C<devm(...)>
+=item devm(...)
 
-=item C<env_samplem(...)>
+=item env_samplem(...)
 
-=item C<envm(...)>
+=item envm(...)
 
-=item C<event_log(...)>
+=item event_log(...)
 
-=item C<filer(...)>
+=item filer(...)
 
-=item C<firewallm(...)>
+=item firewallm(...)
 
-=item C<licensem(...)>
+=item licensem(...)
 
-=item C<mailer(...)>
+=item mailer(...)
 
-=item C<networkm(...)>
+=item networkm(...)
 
-=item C<op_log(...)>
+=item op_log(...)
 
-=item C<packagem(...)>
+=item packagem(...)
 
-=item C<perf_mon(...)>
+=item perf_mon(...)
 
-=item C<proc_info(...)>
+=item proc_info(...)
 
-=item C<processm(...)>
+=item processm(...)
 
-=item C<progress_event(...)>
+=item progress_event(...)
 
-=item C<protocol(...)>
+=item protocol(...)
 
-=item C<relocator(...)>
+=item relocator(...)
 
-=item C<res_log(...)>
+=item res_log(...)
 
-=item C<resourcem(...)>
+=item resourcem(...)
 
-=item C<scheduler(...)>
+=item scheduler(...)
 
-=item C<server_group(...)>
+=item server_group(...)
 
-=item C<servicem(...)>
+=item servicem(...)
 
-=item C<sessionm(...)>
+=item sessionm(...)
 
-=item C<system(...)>
+=item system(...)
 
-=item C<types(...)>
+=item types(...)
 
-=item C<userm(...)>
+=item userm(...)
 
-=item C<vzadevm(...)>
+=item vzadevm(...)
 
-=item C<vzaenvm(...)>
+=item vzaenvm(...)
 
-=item C<vzanetworkm(...)>
+=item vzanetworkm(...)
 
-=item C<vzapackagem(...)>
+=item vzapackagem(...)
 
-=item C<vzaproc_info(...)>
+=item vzaproc_info(...)
 
-=item C<vzaprocessm(...)>
+=item vzaprocessm(...)
 
-=item C<vzarelocator(...)>
+=item vzarelocator(...)
 
-=item C<vzasupport(...)>
+=item vzasupport(...)
 
-=item C<vzatypes(...)>
+=item vzatypes(...)
 
-=item C<vzaup2date(...)>
+=item vzaup2date(...)
 
 =back
 

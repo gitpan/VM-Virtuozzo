@@ -22,7 +22,7 @@ my %module_build_args = (
     "Richard Sim\303\265es <rsimoes AT cpan DOT org>"
   ],
   "dist_name" => "VM-Virtuozzo",
-  "dist_version" => "v0.0.2",
+  "dist_version" => "v0.0.3",
   "license" => "lgpl",
   "module_name" => "VM::Virtuozzo",
   "recommends" => {},

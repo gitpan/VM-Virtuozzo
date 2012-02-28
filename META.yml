@@ -30,4 +30,4 @@ resources:
   bugtracker: https://github.com/rsimoes/vm-virtuozzo/issues
   homepage: https://metacpan.org/release/VM-Virtuozzo
   repository: git://github.com/rsimoes/vm-virtuozzo.git
-version: v0.0.2
+version: v0.0.3
