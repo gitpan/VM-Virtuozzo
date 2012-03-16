@@ -22,7 +22,7 @@ my %module_build_args = (
     "Richard Sim\303\265es <rsimoes AT cpan DOT org>"
   ],
   "dist_name" => "VM-Virtuozzo",
-  "dist_version" => "v0.0.3",
+  "dist_version" => "v0.0.4",
   "license" => "lgpl",
   "module_name" => "VM::Virtuozzo",
   "recommends" => {},
@@ -31,7 +31,7 @@ my %module_build_args = (
     "File::ShareDir" => 0,
     "XML::Compile::Cache" => 0,
     "namespace::clean" => 0,
-    "perl" => "v5.10"
+    "perl" => "v5.10.0"
   },
   "script_files" => [],
   "share_dir" => {

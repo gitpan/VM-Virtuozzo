@@ -1,3 +1,6 @@
+v0.0.4    2012-03-16 03:46:55 America/Chicago
+	- Added missing function import from Socket.pm
+
 v0.0.3    2012-02-27 19:39:59 CST6CDT
 	- Add warning and disclaimer.
 	- Corrected POD formatting.

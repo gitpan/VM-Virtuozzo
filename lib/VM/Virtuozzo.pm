@@ -5,11 +5,12 @@ use strict;
 use warnings FATAL => "all";
 use utf8;
 use Carp;
-use File::ShareDir qw(dist_dir);
+use File::ShareDir "dist_dir";
 use File::Spec::Functions qw(catdir catfile);
 use Params::Check "check";
 use XML::Compile::Cache;
 use VM::Virtuozzo::Response;
+use Socket qw(inet_aton);
 
 use constant {
 	Document => "XML::LibXML::Document",
@@ -18,7 +19,7 @@ use constant {
 
 use namespace::clean;
 
-our $VERSION = 'v0.0.3'; # VERSION
+our $VERSION = 'v0.0.4'; # VERSION
 # ABSTRACT: Client implementation of the Parallels Virtuozzo XML API
 
 my $schema = XML::Compile::Cache->new(
