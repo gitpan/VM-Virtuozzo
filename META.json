@@ -4,7 +4,7 @@
       "Richard Sim\u00c3\u00b5es <rsimoes AT cpan DOT org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 4.300010, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "lgpl_3_0"
    ],
@@ -32,7 +32,9 @@
       "runtime" : {
          "requires" : {
             "File::ShareDir" : "0",
+            "IO" : "0",
             "XML::Compile::Cache" : "0",
+            "XML::Compile::Util" : "0",
             "namespace::clean" : "0",
             "perl" : "v5.10.0"
          }
@@ -59,6 +61,6 @@
          "web" : "https://github.com/rsimoes/vm-virtuozzo"
       }
    },
-   "version" : "v0.0.4"
+   "version" : "v0.0.5"
 }
 

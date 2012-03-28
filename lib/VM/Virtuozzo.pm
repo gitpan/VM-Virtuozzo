@@ -9,8 +9,10 @@ use File::ShareDir "dist_dir";
 use File::Spec::Functions qw(catdir catfile);
 use Params::Check "check";
 use XML::Compile::Cache;
+use XML::Compile::Util "pack_type";
 use VM::Virtuozzo::Response;
 use Socket qw(inet_aton);
+use IO "Socket::INET";
 
 use constant {
 	Document => "XML::LibXML::Document",
@@ -19,7 +21,7 @@ use constant {
 
 use namespace::clean;
 
-our $VERSION = 'v0.0.4'; # VERSION
+our $VERSION = 'v0.0.5'; # VERSION
 # ABSTRACT: Client implementation of the Parallels Virtuozzo XML API
 
 my $schema = XML::Compile::Cache->new(
@@ -72,10 +74,10 @@ sub _write_packet {
 	my $operator = Element->new($short_ns);
 
 	$operator->addChild(
-		defined($params)
-		? $self->_schema->writer($op_type)->($doc, $params)
-		: Element->new($function) );
-	my $packet = $self->_schema->writer($packet_type)->(
+		defined $params
+			? $self->{_schema}->writer($op_type)->($doc, $params)
+			: Element->new($function) );
+	my $packet = $self->{_schema}->writer($packet_type)->(
 		$doc, {
 			id      => $packet_id++,
 			version => "4.0.0",
@@ -93,9 +95,9 @@ foreach my $namespace ( $schema->namespaces->list ) {
 		my ($self, $function, $params) = @_;
 		my $operation = $self->_write_packet($namespace, $function, $params);
 		$operation =~ s/(\w+?>.+?==)\n/$1/gx;
-		$self->_client->print($operation . "\0");
+		$self->{_client}->print($operation . "\0");
 		local $/ = "\0";
-		return $self->_client->getline; } }
+		return $self->{_client}->getline; } }
 #		return Response->new(
 #			$client->reader($namespace)->( $self->_client->getline ) ); } }
 

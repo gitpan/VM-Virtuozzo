@@ -22,14 +22,16 @@ my %module_build_args = (
     "Richard Sim\303\265es <rsimoes AT cpan DOT org>"
   ],
   "dist_name" => "VM-Virtuozzo",
-  "dist_version" => "v0.0.4",
+  "dist_version" => "v0.0.5",
   "license" => "lgpl",
   "module_name" => "VM::Virtuozzo",
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
     "File::ShareDir" => 0,
+    "IO" => 0,
     "XML::Compile::Cache" => 0,
+    "XML::Compile::Util" => 0,
     "namespace::clean" => 0,
     "perl" => "v5.10.0"
   },

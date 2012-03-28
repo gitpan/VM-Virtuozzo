@@ -7,7 +7,7 @@ use utf8;
 use Carp;
 use namespace::clean;
 
-our $VERSION = 'v0.0.4'; # VERSION
+our $VERSION = 'v0.0.5'; # VERSION
 # ABSTRACT: Parallels Virtuozzo API response class
 
 1;
